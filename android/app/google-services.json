@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "279118057011",
+    "project_id": "twaddle-21135",
+    "storage_bucket": "twaddle-21135.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279118057011:android:ab5432e61441a35a029d46",
+        "android_client_info": {
+          "package_name": "com.example.twaddle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279118057011-mstg97chhmif27m5ltkbsf9rurlrpeto.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.twaddle",
+            "certificate_hash": "0731f6cf57d529cbba517626e9c45ca01c30f04d"
+          }
+        },
+        {
+          "client_id": "279118057011-4f8ftajblqnfsb584jkfeafos1tb7vk9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDS2jpRiQNMEpQa3z8hN-etCcQb4j--XW8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279118057011-4f8ftajblqnfsb584jkfeafos1tb7vk9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
