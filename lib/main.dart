@@ -1,9 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:twaddle/constants/colors.dart';
-import 'package:twaddle/screens/home/home.dart';
-import 'core/auth/screens/signin_screen.dart';
+
+import 'package:twaddle/splash.dart';
 import 'core/auth/services/auth_service.dart';
 
 Future main() async {
@@ -23,6 +22,6 @@ class MyApp extends StatelessWidget {
       SystemUiOverlayStyle(statusBarColor: Colors.transparent),
     );
     return MaterialApp(
-        debugShowCheckedModeBanner: false, title: 'Twaddle', home: Home());
+        debugShowCheckedModeBanner: false, title: 'Twaddle', home: Splash());
   }
 }
