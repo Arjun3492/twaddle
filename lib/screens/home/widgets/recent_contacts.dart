@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:twaddle/models/user.dart';
+import 'package:twaddle/utils/helpers.dart';
 
 class RecentContacts extends StatefulWidget {
   @override
@@ -8,15 +8,12 @@ class RecentContacts extends StatefulWidget {
 }
 
 class _RecentContactsState extends State<RecentContacts> {
-  TextEditingController _searchController = TextEditingController();
-  final ValueNotifier<bool> _searchable = ValueNotifier<bool>(false);
   final contactList = User.generateUsers();
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    _searchController.dispose();
+    searchController.dispose();
   }
 
   @override
@@ -36,14 +33,17 @@ class _RecentContactsState extends State<RecentContacts> {
             ),
             child: GestureDetector(
                 onTap: () {
-                  if (_searchable.value == false) {
-                    _searchable.value = true;
-                  } else if (_searchable.value == true) {
-                    _searchable.value = false;
+                  if (searchable.value == false) {
+                    searchable.value = true;
+                  } else if (searchable.value == true) {
+                    if (shouldSearch.value == true) {
+                      searchable.value = false;
+                    }
+                    searchable.value = false;
                   }
                 },
                 child: ValueListenableBuilder<bool>(
-                    valueListenable: _searchable,
+                    valueListenable: searchable,
                     builder: (context, currentState, child) {
                       return (currentState == false)
                           ? Icon(Icons.search, size: 30, color: Colors.white)
@@ -52,7 +52,7 @@ class _RecentContactsState extends State<RecentContacts> {
           ),
           Expanded(
               child: ValueListenableBuilder<bool>(
-                  valueListenable: _searchable,
+                  valueListenable: searchable,
                   builder: (context, currentState, child) {
                     return (currentState == false)
                         ? ListView.separated(
@@ -66,24 +66,21 @@ class _RecentContactsState extends State<RecentContacts> {
                             itemCount: contactList.length)
                         : TextFormField(
                             style: TextStyle(color: Colors.white, fontSize: 20),
-                            controller: _searchController,
+                            controller: searchController,
                             decoration: InputDecoration(
                                 suffixIcon: GestureDetector(
-                                    child:
-                                        Icon(Icons.search, color: Colors.white),
+                                    child: Icon(Icons.search,
+                                        color: Colors.white, size: 30),
                                     onTap: () {
-                                      // if (_formKey.currentState!.validate()) {
-                                      //   print(_searchController.text);
-                                      //   //remove this
-                                      // }
+                                      if (shouldSearch.value == false) {
+                                        shouldSearch.value = true;
+                                      }
                                     }),
                                 border: InputBorder.none,
                                 hintText: "Search...",
                                 hintStyle: TextStyle(color: Colors.white)),
                           );
-                  })
-            
-              ),
+                  })),
         ],
       ),
     );
