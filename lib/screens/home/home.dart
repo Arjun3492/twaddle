@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twaddle/constants/colors.dart';
 import 'package:twaddle/core/auth/screens/signin_screen.dart';
 import 'package:twaddle/core/auth/services/auth_service.dart';
 import 'package:twaddle/screens/home/widgets/messages.dart';
@@ -12,15 +13,18 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: auth.getCurrentUser(),
-        builder: (cnt, snapshot) {
-          if (snapshot.hasData) {
-            return HomePage();
-          } else {
-            return const SignInPage();
-          }
-        });
+    return Scaffold(backgroundColor: kPrimary, body:
+    //  HomePage()
+         FutureBuilder(
+            future: auth.getCurrentUser(),
+            builder: (cnt, snapshot) {
+              if (snapshot.hasData) {
+                return HomePage();
+              } else {
+                return const SignInPage();
+              }
+            }),
+        );
   }
 }
 
