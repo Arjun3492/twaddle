@@ -13,18 +13,18 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: kPrimary, body:
-    //  HomePage()
-         FutureBuilder(
-            future: auth.getCurrentUser(),
-            builder: (cnt, snapshot) {
-              if (snapshot.hasData) {
-                return HomePage();
-              } else {
-                return const SignInPage();
-              }
-            }),
-        );
+    return Scaffold(
+      backgroundColor: kPrimary,
+      body: FutureBuilder(
+          future: auth.getCurrentUser(),
+          builder: (cnt, snapshot) {
+            if (snapshot.hasData) {
+              return HomePage();
+            } else {
+              return const SignInPage();
+            }
+          }),
+    );
   }
 }
 
