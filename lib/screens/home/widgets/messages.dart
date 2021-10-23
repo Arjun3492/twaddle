@@ -88,7 +88,8 @@ class _RecentMessagesState extends State<RecentMessages> {
                             return (snapshot.hasData)
                                 ? _searchListTile(
                                     displayName: ds["displayName"],
-                                    photoURL: ds["photoURL"])
+                                    photoURL: ds["photoURL"],
+                                    email: ds["email"])
                                 : Center(
                                     child: CircularProgressIndicator(),
                                   );
@@ -122,7 +123,10 @@ class _RecentMessagesState extends State<RecentMessages> {
         });
   }
 
-  _searchListTile({required String displayName, required String photoURL}) {
+  _searchListTile(
+      {required String displayName,
+      required String photoURL,
+      required String email}) {
     return GestureDetector(
       onTap: () {},
       child: Row(
@@ -137,6 +141,10 @@ class _RecentMessagesState extends State<RecentMessages> {
                         fontSize: 16,
                         color: kPrimaryDark,
                         fontWeight: FontWeight.bold)),
+                SizedBox(height: 5),
+                Text("${email}",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: kPrimaryDark))
               ],
             ),
           )
