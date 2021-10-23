@@ -11,12 +11,6 @@ class _RecentContactsState extends State<RecentContacts> {
   final contactList = User.generateUsers();
 
   @override
-  void dispose() {
-    super.dispose();
-    searchController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 25),
@@ -37,8 +31,9 @@ class _RecentContactsState extends State<RecentContacts> {
                     searchable.value = true;
                   } else if (searchable.value == true) {
                     if (shouldSearch.value == true) {
-                      searchable.value = false;
+                      shouldSearch.value = false;
                     }
+                    searchController.text = "";
                     searchable.value = false;
                   }
                 },

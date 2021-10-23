@@ -9,11 +9,12 @@ class DatabaseService {
         .set(userInfo);
   }
 
-  Future<Stream<QuerySnapshot>> getUserByUserName(String username) async {
+  Future<QuerySnapshot> getUserByUserName(String username) async {
     return FirebaseFirestore.instance
         .collection("users")
         .where("userName", isEqualTo: username)
-        .snapshots();
+        .get();
+    // .snapshots();
   }
 
   Future createChatRoom(

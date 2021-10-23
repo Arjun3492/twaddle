@@ -14,7 +14,7 @@ class RecentMessages extends StatefulWidget {
 
 class _RecentMessagesState extends State<RecentMessages> {
   DatabaseService db = DatabaseService();
-  late Stream<QuerySnapshot> searchUserList;
+  late Future<QuerySnapshot> searchUserList;
   final messagesList = generateHomePageMessages();
 
   @override
@@ -65,28 +65,37 @@ class _RecentMessagesState extends State<RecentMessages> {
   }
 
   Future<Widget> _searchlist(String username) async {
-    searchUserList = await db.getUserByUserName(username);
+    searchUserList = db.getUserByUserName(username);
 
     return ValueListenableBuilder(
         valueListenable: shouldSearch,
         builder: (ctx, sch, child) {
-          return StreamBuilder<QuerySnapshot>(
-              stream: searchUserList,
+          return FutureBuilder<QuerySnapshot>(
+              future: searchUserList,
               builder: (ctx, snapshot) {
-                return ListView.separated(
-                    padding: EdgeInsets.zero,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot ds = snapshot.data!.docs[index];
-                      return (snapshot.hasData)
-                          ? _searchListTile(
-                              displayName: ds["displayName"],
-                              photoURL: ds["photoURL"])
-                          : Center(
-                              child: CircularProgressIndicator(),
-                            );
-                    },
-                    separatorBuilder: (_, index) => SizedBox(height: 30),
-                    itemCount: snapshot.data!.docs.length);
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Center(
+                        child: CircularProgressIndicator(color: kPrimary));
+                  default:
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else
+                      return ListView.separated(
+                          padding: EdgeInsets.zero,
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot ds = snapshot.data!.docs[index];
+                            return (snapshot.hasData)
+                                ? _searchListTile(
+                                    displayName: ds["displayName"],
+                                    photoURL: ds["photoURL"])
+                                : Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                          },
+                          separatorBuilder: (_, index) => SizedBox(height: 30),
+                          itemCount: snapshot.data!.docs.length);
+                }
               });
           //  (sch == false)
           //     ? const ListTile(
