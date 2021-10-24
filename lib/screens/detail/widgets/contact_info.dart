@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:twaddle/models/message.dart';
 
 class ContactInfo extends StatelessWidget {
-  final Message message;
-  ContactInfo(this.message);
+  final String displayName;
+  late String fName, lName;
+  ContactInfo({
+    Key? key,
+    required this.displayName,
+  }) : super(key: key) {
+    fName = displayName.split(" ")[0];
+    lName = displayName.split(" ")[1];
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,7 +18,7 @@ class ContactInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '${message.user!.firstName}\n${message.user!.lastName}',
+              '$fName\n$lName',
               style: TextStyle(
                   height: 1.2,
                   fontSize: 28,
