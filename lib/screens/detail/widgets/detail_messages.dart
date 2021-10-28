@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:random_string/random_string.dart';
 import 'package:twaddle/constants/colors.dart';
 import 'package:twaddle/core/services/database_service.dart';
@@ -21,16 +22,14 @@ class DetailMessages extends StatefulWidget {
 }
 
 class _DetailMessagesState extends State<DetailMessages> {
-  final myId = 0;
-
-  late Stream<QuerySnapshot> messageStream;
   DatabaseService ds = DatabaseService();
-
+  late Stream<QuerySnapshot> messageStream;
   late String myUsername, myDisplayName, myEmail, myProfilePic, chatRoomId;
 
-  doThisOnInit() async {
+  Future doThisOnInit() async {
     await getCurrentUserInfo();
-    getAndSetMessages();
+    await getAndSetMessages();
+    return true;
   }
 
   getCurrentUserInfo() async {
@@ -50,9 +49,9 @@ class _DetailMessagesState extends State<DetailMessages> {
             b.codeUnitAt(1) +
             b.codeUnitAt(2) +
             b.codeUnitAt(3))) {
-      return "$a-_$b";
+      return "$a-$b";
     } else {
-      return "$b-_$a";
+      return "$b-$a";
     }
   }
 
@@ -92,12 +91,6 @@ class _DetailMessagesState extends State<DetailMessages> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    doThisOnInit();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -109,33 +102,56 @@ class _DetailMessagesState extends State<DetailMessages> {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30))),
-            child: StreamBuilder<QuerySnapshot>(
-              stream: messageStream,
-              builder: (ctx, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return Center(
-                        child: CircularProgressIndicator(color: kPrimary));
-                  default:
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else {
-                      return ListView.separated(
-                          reverse: true,
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) {
-                            DocumentSnapshot ds = snapshot.data!.docs[index];
-                            return (ds["sendBy"] == widget.userName)
-                                ? _buildReceivedText(
-                                    ds["message"], ds["ts"], ds["photoURL"])
-                                : _buildSenderText(ds["message"], ds["ts"]);
-                          },
-                          separatorBuilder: (_, index) => SizedBox(height: 20),
-                          itemCount: snapshot.data!.docs.length);
-                    }
-                }
-              },
-            )),
+            child: FutureBuilder(
+                future: doThisOnInit(),
+                builder: (ctx, snapshot) {
+                  if (snapshot.hasData) {
+                    return StreamBuilder<QuerySnapshot>(
+                      stream: messageStream,
+                      builder: (ctx, snapshots) {
+                        switch (snapshots.connectionState) {
+                          case ConnectionState.waiting:
+                            return Center(
+                                child:
+                                    CircularProgressIndicator(color: kPrimary));
+                          default:
+                            if (snapshots.hasError) {
+                              return Center(
+                                  child: Text('Error: ${snapshots.error}'));
+                            } else {
+                              return ListView.separated(
+                                  reverse: true,
+                                  padding: EdgeInsets.zero,
+                                  itemBuilder: (context, index) {
+                                    DocumentSnapshot ds =
+                                        snapshots.data!.docs[index];
+                                    return (ds["sendBy"] == widget.userName)
+                                        ? _buildReceivedText(
+                                            ds["message"],
+                                            (DateFormat('HH:mm')
+                                                    .format(ds["ts"].toDate()))
+                                                .toString(),
+                                            ds["photoURL"])
+                                        : _buildSenderText(
+                                            ds["message"],
+                                            (DateFormat('HH:mm')
+                                                    .format(ds["ts"].toDate()))
+                                                .toString());
+                                  },
+                                  separatorBuilder: (_, index) =>
+                                      SizedBox(height: 20),
+                                  itemCount: snapshots.data!.docs.length);
+                            }
+                        }
+                      },
+                    );
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else {
+                    return Container();
+                  }
+                })),
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(

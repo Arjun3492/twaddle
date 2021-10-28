@@ -7,9 +7,7 @@ import 'widgets/detail_messages.dart';
 
 class DetailPage extends StatelessWidget {
   DatabaseService ds = DatabaseService();
-  late Stream messageStream;
   final String userName, displayName, photoURL;
-  // late String myUsername, myDisplayName, myEmail, chatRoomId;
   DetailPage(this.userName, this.displayName, this.photoURL, {Key? key})
       : super(key: key);
   @override

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:twaddle/constants/colors.dart';
 import 'package:twaddle/core/services/database_service.dart';
 import 'package:twaddle/screens/detail/detail.dart';
@@ -9,14 +10,15 @@ import 'package:twaddle/utils/helpers.dart';
 class RecentMessages extends StatefulWidget {
   final String myUsername, myDisplayName, myEmail, myProfilePic;
   final Stream<QuerySnapshot> chatRoomStream;
-  late String chatRoomId;
+
+  var chatRoomId = "";
   RecentMessages({
     Key? key,
-    required this.chatRoomStream,
     required this.myUsername,
     required this.myDisplayName,
     required this.myEmail,
     required this.myProfilePic,
+    required this.chatRoomStream,
   }) : super(key: key);
   @override
   State<RecentMessages> createState() => _RecentMessagesState();
@@ -35,9 +37,9 @@ class _RecentMessagesState extends State<RecentMessages> {
             b.codeUnitAt(1) +
             b.codeUnitAt(2) +
             b.codeUnitAt(3))) {
-      return "$a-_$b";
+      return "$a-$b";
     } else {
-      return "$b-_$a";
+      return "$b-$a";
     }
   }
 
@@ -74,7 +76,10 @@ class _RecentMessagesState extends State<RecentMessages> {
                                       DocumentSnapshot ds =
                                           snapshot.data!.docs[index];
                                       return UserListTile(
-                                          lastMessageTs: ds["lastMessageTs"],
+                                          lastMessageTs: (DateFormat('HH:mm')
+                                                  .format(ds["lastMessageTs"]
+                                                      .toDate()))
+                                              .toString(),
                                           lastMessage: ds["lastMessage"],
                                           chatRoomId: ds.id,
                                           myUsername: widget.myUsername);
@@ -206,19 +211,21 @@ class UserListTile extends StatefulWidget {
 
 class _UserListTileState extends State<UserListTile> {
   DatabaseService db = DatabaseService();
-  late String photoURL, displayName, username;
+  late String photoURL = "", displayName = "", username = "";
   getCurrentUserInfo() async {
     username =
-        widget.chatRoomId.replaceAll(widget.myUsername, "").replaceAll("_", "");
+        widget.chatRoomId.replaceAll(widget.myUsername, "").replaceAll("-", "");
     QuerySnapshot userInfo = await db.getUserByUserName(username);
-    displayName = userInfo.docs[0]["displayName"];
     photoURL = userInfo.docs[0]["photoURL"];
+    displayName = userInfo.docs[0]["displayName"];
   }
 
   @override
   void initState() {
     super.initState();
-    getCurrentUserInfo;
+    getCurrentUserInfo().whenComplete(() {
+      setState(() {});
+    });
   }
 
   @override

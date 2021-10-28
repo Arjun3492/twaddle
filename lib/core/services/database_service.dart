@@ -37,8 +37,8 @@ class DatabaseService {
     String myUsername = await SharedPreference().getUserName();
     return FirebaseFirestore.instance
         .collection("chatrooms")
-        .orderBy("lastMessageSendTs", descending: true)
         .where("users", arrayContains: myUsername)
+        .orderBy("lastMessageTs", descending: true)
         .snapshots();
   }
 
