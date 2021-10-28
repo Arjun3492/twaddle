@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
           future: auth.getCurrentUser(),
           builder: (cnt, snapshot) {
             if (snapshot.hasData) {
-              return HomePage();
+              return const HomePage();
             } else {
               return const SignInPage();
             }
@@ -47,8 +47,9 @@ class _HomePageState extends State<HomePage> {
   DatabaseService db = DatabaseService();
   late String myUsername, myDisplayName, myEmail, myProfilePic, chatRoomId;
   late Stream<QuerySnapshot> chatRoomStream;
+  bool loaded = false;
 
-  Future<bool> getChatRoomsAndCurrentUserInfo() async {
+  Future getChatRoomsAndCurrentUserInfo() async {
     myUsername = await SharedPreference().getUserName();
     myDisplayName = await SharedPreference().getUserDisplayName();
     myEmail = await SharedPreference().getUserEmail();
@@ -61,7 +62,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     getChatRoomsAndCurrentUserInfo().whenComplete(() {
-      setState(() {});
+      setState(() {
+        loaded = true;
+      });
     });
     super.initState();
   }
@@ -69,57 +72,51 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(
-                  'Twaddle',
-                  style: TextStyle(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: GestureDetector(
-                    onTap: () {
-                      auth.signOut(context);
-                    },
-                    child: const Icon(Icons.logout, color: Colors.white)),
-              ),
-            ],
-          ),
-          // FutureBuilder(
-          //   future: getChatRoomsAndCurrentUserInfo(),
-          //   builder: (ctx, snapshot) {
-          //     return (snapshot.hasData)
-          //         ?
-          RecentContacts(
-            myUsername: myUsername,
-            myEmail: myEmail,
-            myDisplayName: myDisplayName,
-            myProfilePic: myProfilePic,
-            chatRoomStream: chatRoomStream,
-          ),
-          RecentMessages(
-            myUsername: myUsername,
-            myEmail: myEmail,
-            myDisplayName: myDisplayName,
-            myProfilePic: myProfilePic,
-            chatRoomStream: chatRoomStream,
-          )
-          //         : Container();
-          //   },
-          // ),
-        ],
-      ),
-    );
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+        child: (loaded)
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text(
+                          'Twaddle',
+                          style: TextStyle(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: GestureDetector(
+                            onTap: () {
+                              auth.signOut(context);
+                            },
+                            child:
+                                const Icon(Icons.logout, color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                  RecentContacts(
+                    myUsername: myUsername,
+                    myEmail: myEmail,
+                    myDisplayName: myDisplayName,
+                    myProfilePic: myProfilePic,
+                    chatRoomStream: chatRoomStream,
+                  ),
+                  RecentMessages(
+                    myUsername: myUsername,
+                    myEmail: myEmail,
+                    myDisplayName: myDisplayName,
+                    myProfilePic: myProfilePic,
+                    chatRoomStream: chatRoomStream,
+                  )
+                ],
+              )
+            : CircularProgressIndicator());
   }
 }

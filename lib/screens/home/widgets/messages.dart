@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:twaddle/constants/colors.dart';
 import 'package:twaddle/core/services/database_service.dart';
-import 'package:twaddle/core/services/sharedpref_service.dart';
 import 'package:twaddle/screens/detail/detail.dart';
 import 'package:twaddle/utils/helpers.dart';
 
@@ -43,14 +43,6 @@ class _RecentMessagesState extends State<RecentMessages> {
     }
   }
 
-  // getChatRoomsAndCurrentUserInfo() async {
-  //   myUsername = await SharedPreference().getUserName();
-  //   myDisplayName = await SharedPreference().getUserDisplayName();
-  //   myEmail = await SharedPreference().getUserEmail();
-  //   myProfilePic = await SharedPreference().getUserProfilePic();
-  //   chatRoomStream = await db.getChatRooms();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -65,20 +57,7 @@ class _RecentMessagesState extends State<RecentMessages> {
               valueListenable: searchable,
               builder: (ctx, sch, child) {
                 return (sch == false)
-                    ?
-                    // FutureBuilder(
-                    //     future: getChatRoomsAndCurrentUserInfo(),
-                    //     builder: (ctx, snapshot) {
-                    //       if (snapshot.connectionState ==
-                    //           ConnectionState.waiting) {
-                    //         return CircularProgressIndicator(
-                    //           color: Colors.black26,
-                    //         );
-                    //       } else if (snapshot.connectionState ==
-                    //           ConnectionState.done) {
-                    //         if (snapshot.hasData) {
-                    //           return
-                    StreamBuilder<QuerySnapshot>(
+                    ? StreamBuilder<QuerySnapshot>(
                         stream: widget.chatRoomStream,
                         builder: (ctx, snapshot) {
                           switch (snapshot.connectionState) {
@@ -97,7 +76,10 @@ class _RecentMessagesState extends State<RecentMessages> {
                                       DocumentSnapshot ds =
                                           snapshot.data!.docs[index];
                                       return UserListTile(
-                                          lastMessageTs: ds["lastMessageTs"],
+                                          lastMessageTs: (DateFormat('HH:mm')
+                                                  .format(ds["lastMessageTs"]
+                                                      .toDate()))
+                                              .toString(),
                                           lastMessage: ds["lastMessage"],
                                           chatRoomId: ds.id,
                                           myUsername: widget.myUsername);
@@ -108,13 +90,6 @@ class _RecentMessagesState extends State<RecentMessages> {
                               }
                           }
                         })
-                    //     } else {
-                    //       return Container();
-                    //     }
-                    //   } else {
-                    //     return Container();
-                    //   }
-                    // })
                     : ValueListenableBuilder<bool>(
                         valueListenable: shouldSearch,
                         builder: (ctx, ssch, child) {
@@ -236,19 +211,21 @@ class UserListTile extends StatefulWidget {
 
 class _UserListTileState extends State<UserListTile> {
   DatabaseService db = DatabaseService();
-  late String photoURL, displayName, username;
+  late String photoURL = "", displayName = "", username = "";
   getCurrentUserInfo() async {
     username =
-        widget.chatRoomId.replaceAll(widget.myUsername, "").replaceAll("_", "");
+        widget.chatRoomId.replaceAll(widget.myUsername, "").replaceAll("-", "");
     QuerySnapshot userInfo = await db.getUserByUserName(username);
-    displayName = userInfo.docs[0]["displayName"];
     photoURL = userInfo.docs[0]["photoURL"];
+    displayName = userInfo.docs[0]["displayName"];
   }
 
   @override
   void initState() {
     super.initState();
-    getCurrentUserInfo;
+    getCurrentUserInfo().whenComplete(() {
+      setState(() {});
+    });
   }
 
   @override

@@ -90,12 +90,6 @@ class _DetailMessagesState extends State<DetailMessages> {
     }
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   doThisOnInit();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -155,40 +149,9 @@ class _DetailMessagesState extends State<DetailMessages> {
                       ConnectionState.waiting) {
                     return CircularProgressIndicator();
                   } else {
-                    return Container(
-                      child: Text("hi"),
-                    );
+                    return Container();
                   }
-                }))
-
-        //  StreamBuilder<QuerySnapshot>(
-        //   stream: messageStream,
-        //   builder: (ctx, snapshot) {
-        //     switch (snapshot.connectionState) {
-        //       case ConnectionState.waiting:
-        //         return Center(
-        //             child: CircularProgressIndicator(color: kPrimary));
-        //       default:
-        //         if (snapshot.hasError) {
-        //           return Center(child: Text('Error: ${snapshot.error}'));
-        //         } else {
-        //           return ListView.separated(
-        //               reverse: true,
-        //               padding: EdgeInsets.zero,
-        //               itemBuilder: (context, index) {
-        //                 DocumentSnapshot ds = snapshot.data!.docs[index];
-        //                 return (ds["sendBy"] == widget.userName)
-        //                     ? _buildReceivedText(
-        //                         ds["message"], ds["ts"], ds["photoURL"])
-        //                     : _buildSenderText(ds["message"], ds["ts"]);
-        //               },
-        //               separatorBuilder: (_, index) => SizedBox(height: 20),
-        //               itemCount: snapshot.data!.docs.length);
-        //         }
-        //     }
-        //   },
-        // )),
-        ,
+                })),
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(

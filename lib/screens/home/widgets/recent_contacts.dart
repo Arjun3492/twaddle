@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:twaddle/core/services/database_service.dart';
-import 'package:twaddle/core/services/sharedpref_service.dart';
 import 'package:twaddle/screens/detail/detail.dart';
 import 'package:twaddle/utils/helpers.dart';
 
@@ -18,31 +17,6 @@ class RecentContacts extends StatefulWidget {
     required this.myProfilePic,
     required this.chatRoomStream,
   }) : super(key: key);
-
-  // getChatRoomId(String a, String b) {
-  //   if ((a.codeUnitAt(0) +
-  //           a.codeUnitAt(1) +
-  //           a.codeUnitAt(2) +
-  //           a.codeUnitAt(3)) >
-  //       (b.codeUnitAt(0) +
-  //           b.codeUnitAt(1) +
-  //           b.codeUnitAt(2) +
-  //           b.codeUnitAt(3))) {
-  //     return "$a-$b";
-  //   } else {
-  //     return "$b-$a";
-  //   }
-  // }
-
-  // Future getChatRoomsAndCurrentUserInfo() async {
-  //   chatRoomStream = await db.getChatRooms();
-  //   myUsername = await SharedPreference().getUserName();
-  //   myDisplayName = await SharedPreference().getUserDisplayName();
-  //   myEmail = await SharedPreference().getUserEmail();
-  //   myProfilePic = await SharedPreference().getUserProfilePic();
-  //   return true;
-  // }
-
   @override
   State<RecentContacts> createState() => _RecentContactsState();
 }
@@ -89,13 +63,7 @@ class _RecentContactsState extends State<RecentContacts> {
                   valueListenable: searchable,
                   builder: (context, currentState, child) {
                     return (currentState == false)
-                        ?
-                        // FutureBuilder(
-                        //     future: widget.getChatRoomsAndCurrentUserInfo(),
-                        //     builder: (ctx, snapshot) {
-                        //       if (snapshot.hasData) {
-                        //         return
-                        StreamBuilder<QuerySnapshot>(
+                        ? StreamBuilder<QuerySnapshot>(
                             stream: widget.chatRoomStream,
                             builder: (ctx, snapshots) {
                               return (snapshots.hasData)
@@ -111,17 +79,8 @@ class _RecentContactsState extends State<RecentContacts> {
                                       separatorBuilder: (_, index) =>
                                           SizedBox(width: 15),
                                       itemCount: snapshots.data!.docs.length)
-                                  : Container(
-                                      child: Text("hi"),
-                                    );
+                                  : Container();
                             })
-                        //   } else if (snapshot.connectionState ==
-                        //       ConnectionState.waiting) {
-                        //     return CircularProgressIndicator();
-                        //   } else {
-                        //     return Container();
-                        //   }
-                        // })
                         : TextFormField(
                             style: TextStyle(color: Colors.white, fontSize: 20),
                             controller: searchController,
@@ -157,22 +116,21 @@ class UserAvatar extends StatefulWidget {
 
 class _UserAvatarState extends State<UserAvatar> {
   DatabaseService db = DatabaseService();
-
-  late String photoURL, displayName, username;
-
+  late String photoURL = "", displayName = "", username = "";
   getCurrentUserInfo() async {
     username =
-        widget.chatRoomId.replaceAll(widget.myUsername, "").replaceAll("_", "");
+        widget.chatRoomId.replaceAll(widget.myUsername, "").replaceAll("-", "");
     QuerySnapshot userInfo = await db.getUserByUserName(username);
     photoURL = userInfo.docs[0]["photoURL"];
     displayName = userInfo.docs[0]["displayName"];
-    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    getCurrentUserInfo();
+    getCurrentUserInfo().whenComplete(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -182,10 +140,7 @@ class _UserAvatarState extends State<UserAvatar> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => DetailPage(username, displayName, photoURL)));
       },
-      child: CircleAvatar(
-        radius: 30,
-        backgroundImage: NetworkImage(photoURL),
-      ),
+      child: CircleAvatar(radius: 30, backgroundImage: NetworkImage(photoURL)),
     );
   }
 }
