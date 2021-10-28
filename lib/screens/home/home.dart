@@ -35,9 +35,8 @@ class _HomeState extends State<Home> {
   }
 }
 
-// ignore: must_be_immutable
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -45,47 +44,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   AuthService auth = AuthService();
-
   DatabaseService db = DatabaseService();
-
-  late String myUsername = "",
-      myDisplayName = "",
-      myEmail = "",
-      myProfilePic = "",
-      chatRoomId;
-
+  late String myUsername, myDisplayName, myEmail, myProfilePic, chatRoomId;
   late Stream<QuerySnapshot> chatRoomStream;
 
-  getChatRoomId(String a, String b) {
-    if ((a.codeUnitAt(0) +
-            a.codeUnitAt(1) +
-            a.codeUnitAt(2) +
-            a.codeUnitAt(3)) >
-        (b.codeUnitAt(0) +
-            b.codeUnitAt(1) +
-            b.codeUnitAt(2) +
-            b.codeUnitAt(3))) {
-      return "$a-_$b";
-    } else {
-      return "$b-_$a";
-    }
-  }
-
-  getCurrentUserInfo() async {
+  Future<bool> getChatRoomsAndCurrentUserInfo() async {
     myUsername = await SharedPreference().getUserName();
     myDisplayName = await SharedPreference().getUserDisplayName();
     myEmail = await SharedPreference().getUserEmail();
     myProfilePic = await SharedPreference().getUserProfilePic();
-  }
-
-  getChatRooms() async {
     chatRoomStream = await db.getChatRooms();
+    return true;
   }
 
   @override
   void initState() {
-    getCurrentUserInfo;
-    getChatRooms;
+    // TODO: implement initState
+    getChatRoomsAndCurrentUserInfo().whenComplete(() {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -119,20 +96,28 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
+          // FutureBuilder(
+          //   future: getChatRoomsAndCurrentUserInfo(),
+          //   builder: (ctx, snapshot) {
+          //     return (snapshot.hasData)
+          //         ?
           RecentContacts(
-            myEmail: myEmail,
-            myProfilePic: myProfilePic,
-            myDisplayName: myDisplayName,
             myUsername: myUsername,
+            myEmail: myEmail,
+            myDisplayName: myDisplayName,
+            myProfilePic: myProfilePic,
             chatRoomStream: chatRoomStream,
           ),
           RecentMessages(
-            myEmail: myEmail,
-            myProfilePic: myProfilePic,
-            myDisplayName: myDisplayName,
             myUsername: myUsername,
+            myEmail: myEmail,
+            myDisplayName: myDisplayName,
+            myProfilePic: myProfilePic,
             chatRoomStream: chatRoomStream,
           )
+          //         : Container();
+          //   },
+          // ),
         ],
       ),
     );

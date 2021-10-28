@@ -10,9 +10,8 @@ Future main() async {
   runApp(MyApp());
 }
 
-// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-  AuthService auth = AuthService();
+  final AuthService auth = AuthService();
   MyApp({Key? key}) : super(key: key);
 
   @override

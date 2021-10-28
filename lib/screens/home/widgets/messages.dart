@@ -3,20 +3,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:twaddle/constants/colors.dart';
 import 'package:twaddle/core/services/database_service.dart';
+import 'package:twaddle/core/services/sharedpref_service.dart';
 import 'package:twaddle/screens/detail/detail.dart';
 import 'package:twaddle/utils/helpers.dart';
 
 class RecentMessages extends StatefulWidget {
   final String myUsername, myDisplayName, myEmail, myProfilePic;
   final Stream<QuerySnapshot> chatRoomStream;
-  late String chatRoomId;
+
+  var chatRoomId = "";
   RecentMessages({
     Key? key,
-    required this.chatRoomStream,
     required this.myUsername,
     required this.myDisplayName,
     required this.myEmail,
     required this.myProfilePic,
+    required this.chatRoomStream,
   }) : super(key: key);
   @override
   State<RecentMessages> createState() => _RecentMessagesState();
@@ -35,11 +37,19 @@ class _RecentMessagesState extends State<RecentMessages> {
             b.codeUnitAt(1) +
             b.codeUnitAt(2) +
             b.codeUnitAt(3))) {
-      return "$a-_$b";
+      return "$a-$b";
     } else {
-      return "$b-_$a";
+      return "$b-$a";
     }
   }
+
+  // getChatRoomsAndCurrentUserInfo() async {
+  //   myUsername = await SharedPreference().getUserName();
+  //   myDisplayName = await SharedPreference().getUserDisplayName();
+  //   myEmail = await SharedPreference().getUserEmail();
+  //   myProfilePic = await SharedPreference().getUserProfilePic();
+  //   chatRoomStream = await db.getChatRooms();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +65,20 @@ class _RecentMessagesState extends State<RecentMessages> {
               valueListenable: searchable,
               builder: (ctx, sch, child) {
                 return (sch == false)
-                    ? StreamBuilder<QuerySnapshot>(
+                    ?
+                    // FutureBuilder(
+                    //     future: getChatRoomsAndCurrentUserInfo(),
+                    //     builder: (ctx, snapshot) {
+                    //       if (snapshot.connectionState ==
+                    //           ConnectionState.waiting) {
+                    //         return CircularProgressIndicator(
+                    //           color: Colors.black26,
+                    //         );
+                    //       } else if (snapshot.connectionState ==
+                    //           ConnectionState.done) {
+                    //         if (snapshot.hasData) {
+                    //           return
+                    StreamBuilder<QuerySnapshot>(
                         stream: widget.chatRoomStream,
                         builder: (ctx, snapshot) {
                           switch (snapshot.connectionState) {
@@ -85,6 +108,13 @@ class _RecentMessagesState extends State<RecentMessages> {
                               }
                           }
                         })
+                    //     } else {
+                    //       return Container();
+                    //     }
+                    //   } else {
+                    //     return Container();
+                    //   }
+                    // })
                     : ValueListenableBuilder<bool>(
                         valueListenable: shouldSearch,
                         builder: (ctx, ssch, child) {
