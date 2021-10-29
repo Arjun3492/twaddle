@@ -31,8 +31,8 @@ class AuthService {
 
     UserCredential result =
         await _firebaseAuth.signInWithCredential(credential);
-    User? userDetails = result.user;
-    SharedPreference().saveUserEmail(userDetails!.email ?? "");
+    User userDetails = result.user!;
+    SharedPreference().saveUserEmail(userDetails.email ?? "");
     SharedPreference().saveUserId(userDetails.uid);
     SharedPreference()
         .saveUserName(userDetails.email!.replaceAll("@gmail.com", ""));

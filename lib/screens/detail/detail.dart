@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:twaddle/constants/colors.dart';
-import 'package:twaddle/models/message.dart';
-
+import 'package:twaddle/core/services/database_service.dart';
 import 'widgets/contact_info.dart';
 import 'widgets/detail_app_bar.dart';
 import 'widgets/detail_messages.dart';
 
 class DetailPage extends StatelessWidget {
-  final Message message;
-  DetailPage(this.message);
+  DatabaseService ds = DatabaseService();
+  final String userName, displayName, photoURL;
+  DetailPage(this.userName, this.displayName, this.photoURL, {Key? key})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,8 +17,13 @@ class DetailPage extends StatelessWidget {
         body: Column(
           children: [
             DetailAppBar(),
-            ContactInfo(message),
-            Expanded(child: DetailMessages())
+            ContactInfo(displayName: displayName),
+            Expanded(
+                child: DetailMessages(
+              displayName: displayName,
+              userName: userName,
+              photoURL: photoURL,
+            ))
           ],
         ));
   }

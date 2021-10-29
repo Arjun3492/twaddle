@@ -35,16 +35,17 @@ class DatabaseService {
 
   Future<Stream<QuerySnapshot>> getChatRooms() async {
     String myUsername = await SharedPreference().getUserName();
-
     return FirebaseFirestore.instance
         .collection("chatrooms")
-        .orderBy("lastMessageSendTs", descending: true)
         .where("users", arrayContains: myUsername)
+        .orderBy("lastMessageTs", descending: true)
         .snapshots();
   }
 
-  Future addMessage(String chatRoomId, String messageId,
-      Map<String, dynamic> messageInfoMap) async {
+  Future addMessage(
+      {required String chatRoomId,
+      required String messageId,
+      required Map<String, dynamic> messageInfoMap}) async {
     await FirebaseFirestore.instance
         .collection("chatrooms")
         .doc(chatRoomId)
