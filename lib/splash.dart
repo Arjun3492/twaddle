@@ -7,6 +7,8 @@ import 'package:twaddle/screens/home/home.dart';
 
 // class Splash extends StatelessWidget {
 class Splash extends StatefulWidget {
+  const Splash({Key? key}) : super(key: key);
+
   @override
   State<Splash> createState() => _SplashState();
 }
@@ -19,9 +21,11 @@ class _SplashState extends State<Splash> {
   }
 
   _navigatetohome() async {
-    await Future.delayed(Duration(milliseconds: 1500), () {});
+    await Future.delayed(const Duration(milliseconds: 1500), () {});
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (Context) => Home()));
+        // ignore: non_constant_identifier_names
+        context,
+        MaterialPageRoute(builder: (Context) => Home()));
   }
 
   @override
@@ -39,15 +43,15 @@ class _SplashState extends State<Splash> {
                 height: 450),
             Column(
               children: [
-                Text('Twaddle',
+                const Text('Twaddle',
                     style: TextStyle(
                         fontSize: 35,
                         fontWeight: FontWeight.bold,
                         color: kPrimary)),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Title(
                     color: kGrayLight,
-                    child: Text(
+                    child: const Text(
                       '❝ MOST PEOPLE ARE NICE AND JUST WANT TO HAVE A CHAT ❞',
                       style: TextStyle(
                           fontSize: 12,
@@ -55,7 +59,7 @@ class _SplashState extends State<Splash> {
                           fontStyle: FontStyle.italic,
                           color: Colors.black54),
                     )),
-                SizedBox(height: 64),
+                const SizedBox(height: 64),
               ],
             )
           ],
