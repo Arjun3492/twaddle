@@ -35,30 +35,26 @@ class DetailMessages extends StatelessWidget {
             margin: EdgeInsets.fromLTRB(0, 0, 50, 20),
             height: 50,
             width: 300,
-            child: Stack(
-              children: [
-                TextField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  // onTap: () {
-                  //   _scrollController.animateTo(0,
-                  //       duration: Duration(milliseconds: 300),
-                  //       curve: Curves.easeOut);
-                  // },
-                  decoration: InputDecoration(
-                      fillColor: kGrayLight.withOpacity(0.2),
-                      filled: true,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 18, vertical: 6),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: 'Type Your Message....',
-                      hintStyle: TextStyle(
-                          color: kPrimaryDark.withOpacity(0.3), fontSize: 15)),
-                ),
-              ],
+            child: TextField(
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              // onTap: () {
+              //   _scrollController.animateTo(0,
+              //       duration: Duration(milliseconds: 300),
+              //       curve: Curves.easeOut);
+              // },
+              decoration: InputDecoration(
+                  fillColor: kGrayLight.withOpacity(0.2),
+                  filled: true,
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide.none,
+                  ),
+                  hintText: 'Type Your Message....',
+                  hintStyle: TextStyle(
+                      color: kPrimaryDark.withOpacity(0.3), fontSize: 15)),
             ),
           ),
         ),

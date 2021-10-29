@@ -21,46 +21,49 @@ class _RecentMessagesState extends State<RecentMessages> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-          padding: EdgeInsets.fromLTRB(25, 40, 25, 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-          ),
-          child: ValueListenableBuilder<bool>(
-              valueListenable: searchable,
-              builder: (ctx, sch, child) {
-                return (sch == false)
-                    ? _buildMessages()
-                    : ValueListenableBuilder<bool>(
-                        valueListenable: shouldSearch,
-                        builder: (ctx, ssch, child) {
-                          return (ssch == false)
-                              ? const ListTile(
+        padding: EdgeInsets.fromLTRB(25, 40, 25, 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+        ),
+        child: ValueListenableBuilder<bool>(
+            valueListenable: searchable,
+            builder: (ctx, sch, child) {
+              return (sch == false)
+                  ? _buildMessages()
+                  : ValueListenableBuilder<bool>(
+                      valueListenable: shouldSearch,
+                      builder: (ctx, ssch, child) {
+                        return (ssch == false)
+                            ? // design by ankit
+                            Container(
+                                child: const ListTile(
                                   title: Text("Enter username to search for"),
-                                )
-                              : FutureBuilder(
-                                  future: _searchlist(searchController.text),
-                                  builder:
-                                      (ctx, AsyncSnapshot<Widget> snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.done) {
-                                      return snapshot.data!;
-                                    } else {
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    }
-                                  });
-                        });
-                // FutureBuilder(
-                //     future: _searchlist(searchController.text),
-                //     builder: (ctx, AsyncSnapshot<Widget> snapshot) {
-                //       if (snapshot.hasData) {
-                //         return snapshot.data!;
-                //       } else
-                //         return CircularProgressIndicator();
-                //     });
-              })),
+                                ),
+                              )
+                            : FutureBuilder(
+                                future: _searchlist(searchController.text),
+                                builder: (ctx, AsyncSnapshot<Widget> snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    return snapshot.data!;
+                                  } else {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                });
+                      });
+              // FutureBuilder(
+              //     future: _searchlist(searchController.text),
+              //     builder: (ctx, AsyncSnapshot<Widget> snapshot) {
+              //       if (snapshot.hasData) {
+              //         return snapshot.data!;
+              //       } else
+              //         return CircularProgressIndicator();
+              //     });
+            }),
+      ),
     );
   }
 

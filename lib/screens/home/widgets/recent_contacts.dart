@@ -42,7 +42,8 @@ class _RecentContactsState extends State<RecentContacts> {
                     builder: (context, currentState, child) {
                       return (currentState == false)
                           ? Icon(Icons.search, size: 30, color: Colors.white)
-                          : Icon(Icons.cancel, size: 30, color: Colors.white);
+                          : Icon(Icons.arrow_back_rounded,
+                              size: 30, color: Colors.white);
                     })),
           ),
           Expanded(
