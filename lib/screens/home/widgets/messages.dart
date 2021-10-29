@@ -26,7 +26,7 @@ class RecentMessages extends StatefulWidget {
 
 class _RecentMessagesState extends State<RecentMessages> {
   DatabaseService db = DatabaseService();
-
+  DateTime current = DateTime.now();
   late Future<QuerySnapshot> searchUserList;
   getChatRoomId(String a, String b) {
     if ((a.codeUnitAt(0) +
@@ -75,11 +75,30 @@ class _RecentMessagesState extends State<RecentMessages> {
                                     itemBuilder: (context, index) {
                                       DocumentSnapshot ds =
                                           snapshot.data!.docs[index];
+                                      DateTime messageDate =
+                                          ds["lastMessageTs"].toDate();
+                                      String messageTimeStamp;
+                                      if (current
+                                              .difference(messageDate)
+                                              .inDays >
+                                          1) {
+                                        messageTimeStamp = (DateFormat('yMd')
+                                                .format(ds["lastMessageTs"]
+                                                    .toDate()))
+                                            .toString();
+                                      } else if (current
+                                              .difference(messageDate)
+                                              .inDays ==
+                                          1) {
+                                        messageTimeStamp = "yesterday";
+                                      } else {
+                                        messageTimeStamp = (DateFormat('HH:mm')
+                                                .format(ds["lastMessageTs"]
+                                                    .toDate()))
+                                            .toString();
+                                      }
                                       return UserListTile(
-                                          lastMessageTs: (DateFormat('HH:mm')
-                                                  .format(ds["lastMessageTs"]
-                                                      .toDate()))
-                                              .toString(),
+                                          lastMessageTs: messageTimeStamp,
                                           lastMessage: ds["lastMessage"],
                                           chatRoomId: ds.id,
                                           myUsername: widget.myUsername);
