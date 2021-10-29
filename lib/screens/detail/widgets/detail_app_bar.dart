@@ -16,11 +16,11 @@ class DetailAppBar extends StatelessWidget {
                 size: 25,
               ),
             ),
-            TextButton(
-                onPressed: () {},
-                child: Text('Search',
-                    style: TextStyle(
-                        fontSize: 16, color: Colors.white.withOpacity(0.5))))
+            // TextButton(
+            //     onPressed: () {},
+            //     child: Text('Search',
+            //         style: TextStyle(
+            //             fontSize: 16, color: Colors.white.withOpacity(0.5))))
           ],
         ));
   }

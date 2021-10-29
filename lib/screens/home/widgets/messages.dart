@@ -230,13 +230,19 @@ class UserListTile extends StatefulWidget {
 
 class _UserListTileState extends State<UserListTile> {
   DatabaseService db = DatabaseService();
-  late String photoURL = "", displayName = "", username = "";
+  late String photoURL = "",
+      displayName = "",
+      fName = "",
+      lName = "",
+      username = "";
   getCurrentUserInfo() async {
     username =
         widget.chatRoomId.replaceAll(widget.myUsername, "").replaceAll("-", "");
     QuerySnapshot userInfo = await db.getUserByUserName(username);
     photoURL = userInfo.docs[0]["photoURL"];
     displayName = userInfo.docs[0]["displayName"];
+    fName = displayName.split(" ")[0];
+    lName = displayName.split(" ")[1];
   }
 
   @override
@@ -257,14 +263,14 @@ class _UserListTileState extends State<UserListTile> {
       child: Row(
         children: [
           CircleAvatar(radius: 30, backgroundImage: NetworkImage(photoURL)),
-          SizedBox(width: 10),
+          SizedBox(width: 12),
           Flexible(
             child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(displayName,
+                    Text("${fName} ${lName}",
                         style: TextStyle(
                             fontSize: 16,
                             color: kPrimaryDark,
@@ -273,10 +279,13 @@ class _UserListTileState extends State<UserListTile> {
                         style: TextStyle(color: kGrayLight))
                   ],
                 ),
-                SizedBox(height: 5),
-                Text(widget.lastMessage,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: kPrimaryDark))
+                SizedBox(height: 7),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(widget.lastMessage,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: kPrimaryDark)),
+                )
               ],
             ),
           )

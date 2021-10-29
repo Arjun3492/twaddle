@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twaddle/utils/helpers.dart';
 
 class ContactInfo extends StatelessWidget {
   final String displayName;
@@ -9,6 +10,7 @@ class ContactInfo extends StatelessWidget {
   }) : super(key: key) {
     fName = displayName.split(" ")[0];
     lName = displayName.split(" ")[1];
+    messageSearch.value = false;
   }
   @override
   Widget build(BuildContext context) {
@@ -17,23 +19,61 @@ class ContactInfo extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              '$fName\n$lName',
-              style: TextStyle(
-                  height: 1.2,
-                  fontSize: 28,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
+            ValueListenableBuilder(
+                valueListenable: messageSearch,
+                builder: (context, currentState, child) {
+                  return (messageSearch.value)
+                      ? Expanded(
+                          child: TextFormField(
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    //filter message search
+                                  },
+                                  child: Icon(Icons.search,
+                                      color: Colors.white, size: 30)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white)),
+                              hintText: "Search Messages...",
+                              hintStyle: TextStyle(
+                                  color: Colors.white.withOpacity(0.3))),
+                        ))
+                      : Text(
+                          '$fName\n$lName',
+                          // '${widget.message.user!.firstName}\n${widget.message.user!.lastName}',
+                          style: TextStyle(
+                              height: 1.2,
+                              fontSize: 28,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        );
+                }),
+
+            Container(
+              child: GestureDetector(
+                  onTap: () {
+                    messageSearch.value = !messageSearch.value;
+                  },
+                  child: ValueListenableBuilder<bool>(
+                      valueListenable: messageSearch,
+                      builder: (context, currentState, child) {
+                        return (currentState)
+                            ? Icon(Icons.cancel, size: 30, color: Colors.white)
+                            : Icon(Icons.search, size: 30, color: Colors.white);
+                      })),
             ),
-            Row(
-              children: [
-                _buildCallButton(Icons.phone),
-                SizedBox(
-                  width: 10,
-                ),
-                _buildCallButton(Icons.video_camera_back),
-              ],
-            )
+
+            // Row(
+            //   children: [
+            //     _buildCallButton(Icons.phone),
+            //     SizedBox(
+            //       width: 10,
+            //     ),
+            //     _buildCallButton(Icons.video_camera_back),
+            //   ],
+            // )
           ],
         ));
   }
