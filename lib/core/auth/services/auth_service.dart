@@ -56,6 +56,6 @@ class AuthService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     await auth.signOut().then((value) => Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => SignInPage())));
+        context, MaterialPageRoute(builder: (context) => const SignInPage())));
   }
 }

@@ -10,7 +10,7 @@ import 'package:twaddle/utils/helpers.dart';
 class DetailMessages extends StatefulWidget {
   final String userName, displayName, photoURL;
 
-  DetailMessages(
+  const DetailMessages(
       {Key? key,
       required this.userName,
       required this.displayName,
@@ -95,9 +95,9 @@ class _DetailMessagesState extends State<DetailMessages> {
     return Stack(
       children: [
         Container(
-            margin: EdgeInsets.only(top: 30),
-            padding: EdgeInsets.fromLTRB(25, 30, 25, 80),
-            decoration: BoxDecoration(
+            margin: const EdgeInsets.only(top: 30),
+            padding: const EdgeInsets.fromLTRB(25, 30, 25, 80),
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
@@ -111,7 +111,7 @@ class _DetailMessagesState extends State<DetailMessages> {
                       builder: (ctx, snapshots) {
                         switch (snapshots.connectionState) {
                           case ConnectionState.waiting:
-                            return Center(
+                            return const Center(
                                 child:
                                     CircularProgressIndicator(color: kPrimary));
                           default:

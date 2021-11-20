@@ -6,7 +6,7 @@ import 'widgets/detail_app_bar.dart';
 import 'widgets/detail_messages.dart';
 
 class DetailPage extends StatelessWidget {
-  DatabaseService ds = DatabaseService();
+  final DatabaseService ds = DatabaseService();
   final String userName, displayName, photoURL;
   DetailPage(this.userName, this.displayName, this.photoURL, {Key? key})
       : super(key: key);

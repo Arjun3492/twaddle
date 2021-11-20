@@ -26,14 +26,14 @@ class _RecentContactsState extends State<RecentContacts> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 25),
-      padding: EdgeInsets.only(left: 25),
+      margin: const EdgeInsets.symmetric(vertical: 25),
+      padding: const EdgeInsets.only(left: 25),
       height: 50,
       child: Row(
         children: [
           Container(
-            margin: EdgeInsets.only(right: 10),
-            padding: EdgeInsets.all(10),
+            margin: const EdgeInsets.only(right: 10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.3),
               shape: BoxShape.circle,
@@ -54,8 +54,10 @@ class _RecentContactsState extends State<RecentContacts> {
                     valueListenable: searchable,
                     builder: (context, currentState, child) {
                       return (currentState == false)
-                          ? Icon(Icons.search, size: 30, color: Colors.white)
-                          : Icon(Icons.cancel, size: 30, color: Colors.white);
+                          ? const Icon(Icons.search,
+                              size: 30, color: Colors.white)
+                          : const Icon(Icons.arrow_back_rounded,
+                              size: 30, color: Colors.white);
                     })),
           ),
           Expanded(
@@ -77,16 +79,17 @@ class _RecentContactsState extends State<RecentContacts> {
                                             myUsername: widget.myUsername);
                                       },
                                       separatorBuilder: (_, index) =>
-                                          SizedBox(width: 15),
+                                          const SizedBox(width: 15),
                                       itemCount: snapshots.data!.docs.length)
                                   : Container();
                             })
                         : TextFormField(
-                            style: TextStyle(color: Colors.white, fontSize: 20),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 20),
                             controller: searchController,
                             decoration: InputDecoration(
                                 suffixIcon: GestureDetector(
-                                    child: Icon(Icons.search,
+                                    child: const Icon(Icons.search,
                                         color: Colors.white, size: 30),
                                     onTap: () {
                                       if (shouldSearch.value == false) {
@@ -95,7 +98,8 @@ class _RecentContactsState extends State<RecentContacts> {
                                     }),
                                 border: InputBorder.none,
                                 hintText: "Search...",
-                                hintStyle: TextStyle(color: Colors.white)),
+                                hintStyle:
+                                    const TextStyle(color: Colors.white)),
                           );
                   })),
         ],
